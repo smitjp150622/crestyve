@@ -1,0 +1,9 @@
+export { Hero } from "./hero";
+export { Story } from "./story";
+export { Craftsmanship } from "./craftsmanship";
+export { CollectionsPreview } from "./collections-preview";
+export { MakingProcess } from "./making-process";
+export { Testimonials } from "./testimonials";
+export { Statistics } from "./statistics";
+export { InstagramFeed } from "./instagram-feed";
+export { CTA } from "./cta";

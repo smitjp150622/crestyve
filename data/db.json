@@ -1,0 +1,238 @@
+{
+  "categories": [
+    {
+      "id": "cat-jackets-001",
+      "name": "Hand-Painted Jackets",
+      "slug": "hand-painted-jackets",
+      "description": "Unique hand-painted denim and leather jackets, each a wearable masterpiece.",
+      "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800",
+      "order": 1,
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z"
+    },
+    {
+      "id": "cat-sneakers-002",
+      "name": "Custom Sneakers",
+      "slug": "custom-sneakers",
+      "description": "One-of-a-kind hand-painted sneakers that tell your story.",
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800",
+      "order": 2,
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z"
+    },
+    {
+      "id": "cat-accessories-003",
+      "name": "Accessories",
+      "slug": "accessories",
+      "description": "Hand-crafted bags, belts, and accessories with artistic flair.",
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800",
+      "order": 3,
+      "createdAt": "2024-01-15T10:00:00.000Z",
+      "updatedAt": "2024-01-15T10:00:00.000Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-001",
+      "name": "Aurora Denim Jacket",
+      "slug": "aurora-denim-jacket",
+      "description": "A stunning hand-painted denim jacket featuring an aurora borealis design. Each stroke captures the ethereal beauty of the northern lights.",
+      "price": 15000,
+      "images": [
+        "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800",
+        "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800"
+      ],
+      "video": "",
+      "categoryId": "cat-jackets-001",
+      "materials": [
+        "Premium Denim",
+        "Acrylic Paint",
+        "Fabric Sealant"
+      ],
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "available": true,
+      "featured": true,
+      "artistNotes": "Inspired by the northern lights I witnessed during my trip to Iceland. Each jacket takes 40+ hours to complete.",
+      "order": 1,
+      "createdAt": "2024-02-01T10:00:00.000Z",
+      "updatedAt": "2024-02-01T10:00:00.000Z"
+    },
+    {
+      "id": "prod-002",
+      "name": "Midnight Garden Sneakers",
+      "slug": "midnight-garden-sneakers",
+      "description": "Hand-painted Air Force 1s featuring a dark floral garden motif with metallic gold accents.",
+      "price": 8500,
+      "images": [
+        "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800",
+        "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?w=800"
+      ],
+      "video": "",
+      "categoryId": "cat-sneakers-002",
+      "materials": [
+        "Leather",
+        "Angelus Paint",
+        "Matte Finisher"
+      ],
+      "sizes": [
+        "UK 6",
+        "UK 7",
+        "UK 8",
+        "UK 9",
+        "UK 10"
+      ],
+      "available": true,
+      "featured": true,
+      "artistNotes": "The floral patterns are inspired by Victorian botanical illustrations, reimagined with a modern dark aesthetic.",
+      "order": 2,
+      "createdAt": "2024-02-10T10:00:00.000Z",
+      "updatedAt": "2024-02-10T10:00:00.000Z"
+    },
+    {
+      "id": "prod-003",
+      "name": "Celestial Leather Tote",
+      "slug": "celestial-leather-tote",
+      "description": "A premium leather tote hand-painted with constellation maps and celestial bodies.",
+      "price": 12000,
+      "images": [
+        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800"
+      ],
+      "video": "",
+      "categoryId": "cat-accessories-003",
+      "materials": [
+        "Full-grain Leather",
+        "Leather Paint",
+        "UV Protectant"
+      ],
+      "sizes": [
+        "One Size"
+      ],
+      "available": true,
+      "featured": false,
+      "artistNotes": "Each tote features a unique star map based on the customer's birth date.",
+      "order": 3,
+      "createdAt": "2024-03-01T10:00:00.000Z",
+      "updatedAt": "2024-03-01T10:00:00.000Z"
+    },
+    {
+      "name": "New Purpel Shirt",
+      "slug": "new-purpel-shirt",
+      "description": "dhkjashkasdh",
+      "price": 5000,
+      "images": [],
+      "video": null,
+      "categoryId": "cat-jackets-001",
+      "materials": [
+        "fassds",
+        "dasdasas",
+        "asdasdsa"
+      ],
+      "sizes": [
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "available": true,
+      "featured": false,
+      "artistNotes": null,
+      "id": "50c5c570b08f457f9cb1c84f6",
+      "createdAt": "2026-06-27T15:13:34.787Z",
+      "updatedAt": "2026-06-27T15:13:49.690Z"
+    },
+    {
+      "name": "pritend shirt",
+      "slug": "pritend-shirt",
+      "description": "",
+      "price": 10000,
+      "images": [],
+      "video": "",
+      "categoryId": "cat-jackets-001",
+      "materials": [],
+      "sizes": [
+        "XL",
+        "S",
+        "M",
+        "L",
+        "XS"
+      ],
+      "available": true,
+      "featured": false,
+      "artistNotes": "",
+      "order": 0,
+      "id": "4b1a8c51606e439da2d904f14",
+      "createdAt": "2026-06-29T14:05:45.893Z",
+      "updatedAt": "2026-06-29T14:05:45.893Z"
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "test-001",
+      "name": "Priya Sharma",
+      "role": "Fashion Blogger",
+      "content": "The hand-painted jacket I received from Crestyve is absolutely stunning. The attention to detail is incredible — every brushstroke tells a story.",
+      "featured": true,
+      "order": 1,
+      "createdAt": "2024-03-15T10:00:00.000Z",
+      "updatedAt": "2024-03-15T10:00:00.000Z"
+    },
+    {
+      "id": "test-002",
+      "name": "Arjun Mehta",
+      "role": "Art Collector",
+      "content": "Crestyve transforms fashion into wearable art. My custom sneakers are conversation starters everywhere I go.",
+      "featured": true,
+      "order": 2,
+      "createdAt": "2024-03-20T10:00:00.000Z",
+      "updatedAt": "2024-03-20T10:00:00.000Z"
+    }
+  ],
+  "awards": [
+    {
+      "id": "award-001",
+      "title": "Best Emerging Fashion Artist",
+      "description": "Recognized for innovative hand-painted fashion design.",
+      "year": 2024,
+      "order": 1,
+      "createdAt": "2024-04-01T10:00:00.000Z",
+      "updatedAt": "2024-04-01T10:00:00.000Z"
+    }
+  ],
+  "gallery": [
+    {
+      "id": "gal-001",
+      "title": "Aurora Collection - Detail",
+      "url": "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800",
+      "category": "Process",
+      "featured": true,
+      "order": 1,
+      "createdAt": "2024-02-01T10:00:00.000Z",
+      "updatedAt": "2024-02-01T10:00:00.000Z"
+    },
+    {
+      "id": "gal-002",
+      "title": "Studio Session",
+      "url": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800",
+      "category": "Studio",
+      "featured": false,
+      "order": 2,
+      "createdAt": "2024-02-15T10:00:00.000Z",
+      "updatedAt": "2024-02-15T10:00:00.000Z"
+    }
+  ],
+  "messages": [],
+  "settings": {
+    "id": "default",
+    "heroTitle": "Wear Your Story",
+    "heroSubtitle": "Handcrafted Fashion. Painted with Passion.",
+    "whatsappNumber": "+918884942210",
+    "instagramHandle": "@crestyve",
+    "email": "hello@crestyve.com",
+    "studioAddress": "Bangalore, India"
+  }
+}

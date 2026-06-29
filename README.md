@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CRESTYVE — Wear Your Story
+
+A luxury handcrafted fashion website built with Next.js 15. This is **not** an e-commerce site — it's a storytelling and lead generation platform designed as an Awwwards-quality immersive experience.
+
+Every interaction guides visitors toward contacting the artist through WhatsApp.
+
+## Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Animations:** GSAP, Lenis (smooth scroll), Framer Motion
+- **Database:** PostgreSQL via Prisma ORM
+- **Auth:** NextAuth.js
+- **Media:** Cloudinary
+- **Forms:** React Hook Form + Zod
+- **Deployment:** Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL database (Neon recommended)
+
+### Installation
+
+```bash
+npm install
+```
+
+### Environment Setup
+
+Copy `.env.example` to `.env` and fill in your values:
+
+```bash
+cp .env.example .env
+```
+
+### Database Setup
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── admin/             # Admin panel
+│   ├── about/             # About page
+│   ├── collections/       # Collections page
+│   ├── contact/           # Contact page
+│   ├── gallery/           # Gallery page
+│   ├── journal/           # Blog/Journal page
+│   ├── lookbook/          # Lookbook page
+│   ├── products/[slug]/   # Product detail page
+│   └── api/               # API routes
+├── components/
+│   ├── layout/            # Navbar, Footer, WhatsApp float
+│   ├── sections/          # Page sections (Hero, Story, etc.)
+│   └── ui/                # Reusable UI components
+├── lib/                   # Utilities, Prisma client
+├── hooks/                 # Custom React hooks
+├── types/                 # TypeScript type definitions
+└── constants/             # Site configuration
+```
 
-## Learn More
+## Design System
 
-To learn more about Next.js, take a look at the following resources:
+- **Primary:** #8B1C3F (Deep Burgundy)
+- **Secondary:** #D4A731 (Luxury Gold)
+- **Dark:** #111111
+- **Light:** #FAFAF8 (Warm White)
+- **Typography:** Cormorant Garamond (display), Inter (body), Manrope (UI)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Immersive storytelling scroll experience
+- Full-screen video hero
+- Horizontal scroll gallery
+- Parallax and pinned sections
+- Smooth scroll (Lenis)
+- Animated statistics counters
+- WhatsApp integration on every product
+- Responsive across all devices
+- Admin panel for content management
+- Contact form with API
+- Masonry gallery with lightbox
+- Timeline component
+- Testimonial slider
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deploy to Vercel:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+vercel
+```
+
+Set environment variables in Vercel dashboard.
+
+## License
+
+Private — All rights reserved.
