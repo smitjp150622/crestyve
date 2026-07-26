@@ -168,6 +168,24 @@
       "id": "4b1a8c51606e439da2d904f14",
       "createdAt": "2026-06-29T14:05:45.893Z",
       "updatedAt": "2026-06-29T14:05:45.893Z"
+    },
+    {
+      "name": "Test Product",
+      "slug": "test-product",
+      "description": "",
+      "price": 1000,
+      "images": [],
+      "video": "",
+      "categoryId": "cat-jackets-001",
+      "materials": [],
+      "sizes": [],
+      "available": true,
+      "featured": false,
+      "artistNotes": "",
+      "order": 0,
+      "id": "508190be596f42e2b9e8f4550",
+      "createdAt": "2026-07-26T06:49:47.767Z",
+      "updatedAt": "2026-07-26T06:49:47.769Z"
     }
   ],
   "testimonials": [
@@ -225,14 +243,28 @@
       "updatedAt": "2024-02-15T10:00:00.000Z"
     }
   ],
-  "messages": [],
+  "messages": [
+    {
+      "name": "Test User",
+      "email": "test@example.com",
+      "message": "Hello",
+      "id": "5385fbe799d14549b73bb91ea",
+      "read": false,
+      "createdAt": "2026-07-26T06:45:28.295Z"
+    }
+  ],
   "settings": {
     "id": "default",
-    "heroTitle": "Wear Your Story",
+    "heroTitle": "Wear Your Storysss",
     "heroSubtitle": "Handcrafted Fashion. Painted with Passion.",
     "whatsappNumber": "+918884942210",
     "instagramHandle": "@crestyve",
     "email": "hello@crestyve.com",
-    "studioAddress": "Bangalore, India"
+    "studioAddress": "Bangalore, India",
+    "heroVideo": "",
+    "aboutTitle": "",
+    "aboutContent": "",
+    "artistImage": "",
+    "mapEmbedUrl": ""
   }
 }
