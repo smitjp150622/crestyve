@@ -2,7 +2,9 @@ import fs from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 
-const DB_PATH = path.join(process.cwd(), "data", "db.json");
+const IS_VERCEL = process.env.VERCEL === "1" || process.env.NOW_BUILDER === "1";
+const ORIGINAL_DB_PATH = path.join(process.cwd(), "data", "db.json");
+const DB_PATH = IS_VERCEL ? path.join("/tmp", "db.json") : ORIGINAL_DB_PATH;
 
 export interface Category {
   id: string;
@@ -127,6 +129,19 @@ function getDefaultDB(): Database {
 
 function readDB(): Database {
   try {
+    if (IS_VERCEL && !fs.existsSync(DB_PATH)) {
+      try {
+        if (fs.existsSync(ORIGINAL_DB_PATH)) {
+          fs.copyFileSync(ORIGINAL_DB_PATH, DB_PATH);
+        } else {
+          const defaultDB = getDefaultDB();
+          fs.writeFileSync(DB_PATH, JSON.stringify(defaultDB, null, 2));
+        }
+      } catch (err) {
+        console.error("Failed to copy seed db to /tmp on Vercel:", err);
+      }
+    }
+
     if (!fs.existsSync(DB_PATH)) {
       const defaultDB = getDefaultDB();
       fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
@@ -135,14 +150,19 @@ function readDB(): Database {
     }
     const raw = fs.readFileSync(DB_PATH, "utf-8");
     return JSON.parse(raw) as Database;
-  } catch {
+  } catch (error) {
+    console.error("Error reading database:", error);
     return getDefaultDB();
   }
 }
 
 function writeDB(db: Database): void {
-  fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
+  try {
+    fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
+    fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
+  } catch (error) {
+    console.error("Error writing database:", error);
+  }
 }
 
 export function generateId(): string {
