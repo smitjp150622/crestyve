@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 interface ProductCategory {
@@ -53,6 +53,13 @@ export default function ProductClient({
 }: ProductClientProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [showBefore, setShowBefore] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [sizeError, setSizeError] = useState(false);
+  const [showInquiryForm, setShowInquiryForm] = useState(false);
+  const [inquiryName, setInquiryName] = useState("");
+  const [inquiryPhone, setInquiryPhone] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [inquiryError, setInquiryError] = useState<string | null>(null);
 
   const nextImage = () =>
     setCurrentImage((prev) => (prev + 1) % product.images.length);
@@ -61,9 +68,48 @@ export default function ProductClient({
       (prev) => (prev - 1 + product.images.length) % product.images.length
     );
 
-  const whatsappLink = `https://wa.me/${whatsappNumber.replace(/[\s+]/g, "")}?text=${encodeURIComponent(
+  const fallbackWhatsappLink = `https://wa.me/${whatsappNumber.replace(/[\s+]/g, "")}?text=${encodeURIComponent(
     `Hi, I'm interested in "${product.name}" (₹${product.price.toLocaleString("en-IN")}). Can you share more information?`
   )}`;
+
+  function openInquiryForm() {
+    if (product.sizes.length > 0 && !selectedSize) {
+      setSizeError(true);
+      return;
+    }
+    setSizeError(false);
+    setInquiryError(null);
+    setShowInquiryForm(true);
+  }
+
+  async function submitInquiry() {
+    if (!inquiryName.trim() || !inquiryPhone.trim()) {
+      setInquiryError("Please enter your name and phone number.");
+      return;
+    }
+    setSubmitting(true);
+    setInquiryError(null);
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerName: inquiryName.trim(),
+          phone: inquiryPhone.trim(),
+          productId: product.id,
+          selectedSize: selectedSize ?? undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to submit");
+      window.open(data.whatsappUrl, "_blank", "noopener,noreferrer");
+      setShowInquiryForm(false);
+    } catch {
+      setInquiryError("Something went wrong. Please try WhatsApp directly.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <main className="pt-20">
@@ -213,14 +259,28 @@ export default function ProductClient({
                     </h4>
                     <div className="flex gap-2">
                       {product.sizes.map((size) => (
-                        <span
+                        <button
                           key={size}
-                          className="w-12 h-12 flex items-center justify-center border border-border font-manrope text-sm text-dark hover:bg-dark hover:text-white transition-colors cursor-pointer"
+                          type="button"
+                          onClick={() => {
+                            setSelectedSize(size);
+                            setSizeError(false);
+                          }}
+                          className={`w-12 h-12 flex items-center justify-center border font-manrope text-sm transition-colors cursor-pointer ${
+                            selectedSize === size
+                              ? "bg-dark text-white border-dark"
+                              : "border-border text-dark hover:bg-dark hover:text-white"
+                          }`}
                         >
                           {size}
-                        </span>
+                        </button>
                       ))}
                     </div>
+                    {sizeError && (
+                      <p className="mt-2 font-inter text-xs text-red-600">
+                        Please select a size to continue.
+                      </p>
+                    )}
                   </div>
                 )}
 
@@ -239,15 +299,86 @@ export default function ProductClient({
                 </div>
 
                 {/* CTA */}
-                <a
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-full inline-flex items-center justify-center gap-3 bg-primary px-10 py-5 font-manrope text-sm font-medium tracking-wide text-white transition-all duration-300 hover:bg-primary/90"
-                >
-                  Contact on WhatsApp
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
+                {product.available ? (
+                  <button
+                    type="button"
+                    onClick={openInquiryForm}
+                    className="group w-full inline-flex items-center justify-center gap-3 bg-primary px-10 py-5 font-manrope text-sm font-medium tracking-wide text-white transition-all duration-300 hover:bg-primary/90"
+                  >
+                    Buy via WhatsApp
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
+                ) : (
+                  <a
+                    href={fallbackWhatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group w-full inline-flex items-center justify-center gap-3 bg-dark/80 px-10 py-5 font-manrope text-sm font-medium tracking-wide text-white transition-all duration-300 hover:bg-dark"
+                  >
+                    Ask About This Piece
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </a>
+                )}
+
+                {/* Inquiry Form Modal */}
+                {showInquiryForm && (
+                  <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white w-full max-w-sm p-6 rounded-lg">
+                      <h3 className="font-cormorant text-2xl text-dark mb-1">
+                        Buy via WhatsApp
+                      </h3>
+                      <p className="font-inter text-xs text-muted mb-6">
+                        {product.name}
+                        {selectedSize ? ` · Size ${selectedSize}` : ""}
+                      </p>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block font-manrope text-xs uppercase tracking-wide text-dark mb-1.5">
+                            Your Name
+                          </label>
+                          <input
+                            type="text"
+                            value={inquiryName}
+                            onChange={(e) => setInquiryName(e.target.value)}
+                            className="w-full border border-border px-4 py-2.5 font-inter text-sm focus:outline-none focus:border-primary"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-manrope text-xs uppercase tracking-wide text-dark mb-1.5">
+                            Phone Number
+                          </label>
+                          <input
+                            type="tel"
+                            value={inquiryPhone}
+                            onChange={(e) => setInquiryPhone(e.target.value)}
+                            className="w-full border border-border px-4 py-2.5 font-inter text-sm focus:outline-none focus:border-primary"
+                          />
+                        </div>
+                        {inquiryError && (
+                          <p className="font-inter text-xs text-red-600">{inquiryError}</p>
+                        )}
+                        <div className="flex gap-3 pt-2">
+                          <button
+                            type="button"
+                            onClick={() => setShowInquiryForm(false)}
+                            className="flex-1 border border-border px-4 py-3 font-manrope text-xs uppercase tracking-wide text-dark hover:bg-dark/5 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            onClick={submitInquiry}
+                            disabled={submitting}
+                            className="flex-1 inline-flex items-center justify-center gap-2 bg-primary px-4 py-3 font-manrope text-xs uppercase tracking-wide text-white hover:bg-primary/90 transition-colors disabled:opacity-60"
+                          >
+                            {submitting && <Loader2 className="h-3 w-3 animate-spin" />}
+                            Continue
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Artist Notes */}
                 {product.artistNotes && (
