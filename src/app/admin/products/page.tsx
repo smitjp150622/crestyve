@@ -34,6 +34,12 @@ interface Product {
   available: boolean;
   featured: boolean;
   artistNotes: string | null;
+  stock: number | null;
+}
+
+interface SizeStock {
+  size: string;
+  stock: number;
 }
 
 interface Toast {
@@ -56,6 +62,8 @@ const emptyForm = {
   artistNotes: "",
   available: true,
   featured: false,
+  stock: "",
+  sizeStocks: [] as SizeStock[],
 };
 
 function slugify(text: string) {
@@ -122,7 +130,7 @@ export default function AdminProducts() {
     setShowModal(true);
   }
 
-  function openEdit(product: Product) {
+  async function openEdit(product: Product) {
     setForm({
       name: product.name,
       slug: product.slug,
@@ -136,10 +144,37 @@ export default function AdminProducts() {
       artistNotes: product.artistNotes || "",
       available: product.available,
       featured: product.featured,
+      stock: product.stock !== null && product.stock !== undefined ? String(product.stock) : "",
+      sizeStocks: [],
     });
     setEditingId(product.id);
     setSlugEdited(true);
     setShowModal(true);
+
+    try {
+      const res = await fetch(`/api/admin/products/${product.id}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.sizeStocks)) {
+          setForm((prev) => ({ ...prev, sizeStocks: data.sizeStocks }));
+        }
+      }
+    } catch {
+      // non-fatal: size stock editing will just start empty
+    }
+  }
+
+  function setSizeStock(size: string, stockValue: string) {
+    setForm((prev) => {
+      const stock = stockValue === "" ? 0 : Math.max(0, parseInt(stockValue) || 0);
+      const existing = prev.sizeStocks.filter((s) => s.size !== size);
+      return { ...prev, sizeStocks: [...existing, { size, stock }] };
+    });
+  }
+
+  function getSizeStock(size: string): string {
+    const found = form.sizeStocks.find((s) => s.size === size);
+    return found ? String(found.stock) : "";
   }
 
   function updateField(field: string, value: unknown) {
@@ -158,6 +193,9 @@ export default function AdminProducts() {
       sizes: prev.sizes.includes(size)
         ? prev.sizes.filter((s) => s !== size)
         : [...prev.sizes, size],
+      sizeStocks: prev.sizes.includes(size)
+        ? prev.sizeStocks.filter((s) => s.size !== size)
+        : prev.sizeStocks,
     }));
   }
 
@@ -203,6 +241,11 @@ export default function AdminProducts() {
       artistNotes: form.artistNotes || null,
       available: form.available,
       featured: form.featured,
+      stock: form.stock === "" ? null : parseInt(form.stock),
+      sizeStocks: form.sizes.length > 0 ? form.sizes.map((s) => ({
+        size: s,
+        stock: form.sizeStocks.find((ss) => ss.size === s)?.stock ?? 0,
+      })) : [],
     };
 
     try {
@@ -564,6 +607,24 @@ export default function AdminProducts() {
                 </div>
               </div>
 
+              {/* Stock */}
+              <div>
+                <label className="block font-manrope text-xs font-medium text-gray-700 mb-1.5">
+                  Overall Stock
+                  <span className="text-gray-400 font-normal ml-1">
+                    (leave blank for unlimited)
+                  </span>
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={form.stock}
+                  onChange={(e) => updateField("stock", e.target.value)}
+                  className="w-full sm:w-48 border border-gray-200 rounded-lg px-4 py-2.5 font-inter text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1C3F]/20 focus:border-[#8B1C3F]"
+                  placeholder="Unlimited"
+                />
+              </div>
+
               {/* Materials */}
               <div>
                 <label className="block font-manrope text-xs font-medium text-gray-700 mb-1.5">
@@ -602,6 +663,25 @@ export default function AdminProducts() {
                     </button>
                   ))}
                 </div>
+                {form.sizes.length > 0 && (
+                  <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {form.sizes.map((size) => (
+                      <div key={size}>
+                        <label className="block font-manrope text-[11px] font-medium text-gray-500 mb-1">
+                          Stock for {size}
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          value={getSizeStock(size)}
+                          onChange={(e) => setSizeStock(size, e.target.value)}
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 font-inter text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1C3F]/20 focus:border-[#8B1C3F]"
+                          placeholder="0"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Images */}

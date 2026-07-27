@@ -57,6 +57,8 @@ export async function POST(request: NextRequest) {
       beforeImage: body.beforeImage,
       afterImage: body.afterImage,
       order: body.order ?? 0,
+      stock: body.stock ?? null,
+      sizeStocks: Array.isArray(body.sizeStocks) ? body.sizeStocks : undefined,
     });
 
     return NextResponse.json(product, { status: 201 });

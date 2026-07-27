@@ -16,6 +16,9 @@ import {
   X,
   LogOut,
   User,
+  ShoppingBag,
+  Tag,
+  Receipt,
 } from "lucide-react";
 
 const adminNav = [
@@ -23,6 +26,9 @@ const adminNav = [
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/categories", label: "Categories", icon: FolderOpen },
   { href: "/admin/media", label: "Media", icon: Image },
+  { href: "/admin/inquiries", label: "Inquiries", icon: ShoppingBag },
+  { href: "/admin/orders", label: "Orders", icon: Receipt },
+  { href: "/admin/coupons", label: "Coupons", icon: Tag },
   { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquare },
   { href: "/admin/awards", label: "Awards", icon: Trophy },
   { href: "/admin/settings", label: "Settings", icon: Settings },
