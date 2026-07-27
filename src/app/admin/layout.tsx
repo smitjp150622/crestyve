@@ -51,7 +51,7 @@ export default function AdminLayout({
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-dark text-white transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto ${
+        className={`print:hidden fixed inset-y-0 left-0 z-50 w-64 bg-dark text-white transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -119,7 +119,7 @@ export default function AdminLayout({
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-h-screen">
         {/* Top Bar */}
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center px-6 gap-4 sticky top-0 z-40">
+        <header className="print:hidden h-16 bg-white border-b border-gray-200 flex items-center px-6 gap-4 sticky top-0 z-40">
           <button
             onClick={() => setSidebarOpen(true)}
             className="lg:hidden text-gray-600 hover:text-gray-900"

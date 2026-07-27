@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Loader2, ShoppingBag, Check } from "lucide-react";
 import Link from "next/link";
+import { useCart } from "@/lib/cart/CartContext";
 
 interface ProductCategory {
   id: string;
@@ -29,6 +30,7 @@ interface ProductData {
   beforeImage?: string;
   afterImage?: string;
   order: number;
+  stock?: number | null;
 }
 
 interface RelatedProduct {
@@ -60,6 +62,32 @@ export default function ProductClient({
   const [inquiryPhone, setInquiryPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [inquiryError, setInquiryError] = useState<string | null>(null);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addItem } = useCart();
+
+  const outOfStock = product.stock !== null && product.stock !== undefined && product.stock <= 0;
+
+  function handleAddToCart() {
+    if (product.sizes.length > 0 && !selectedSize) {
+      setSizeError(true);
+      return;
+    }
+    setSizeError(false);
+    addItem(
+      {
+        productId: product.id,
+        name: product.name,
+        slug: product.slug,
+        image: product.images[0] ?? null,
+        price: product.price,
+        size: selectedSize,
+        maxStock: product.stock ?? null,
+      },
+      1
+    );
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  }
 
   const nextImage = () =>
     setCurrentImage((prev) => (prev + 1) % product.images.length);
@@ -299,15 +327,32 @@ export default function ProductClient({
                 </div>
 
                 {/* CTA */}
-                {product.available ? (
-                  <button
-                    type="button"
-                    onClick={openInquiryForm}
-                    className="group w-full inline-flex items-center justify-center gap-3 bg-primary px-10 py-5 font-manrope text-sm font-medium tracking-wide text-white transition-all duration-300 hover:bg-primary/90"
-                  >
-                    Buy via WhatsApp
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
+                {product.available && !outOfStock ? (
+                  <div className="space-y-3">
+                    <button
+                      type="button"
+                      onClick={handleAddToCart}
+                      className="group w-full inline-flex items-center justify-center gap-3 bg-dark px-10 py-5 font-manrope text-sm font-medium tracking-wide text-white transition-all duration-300 hover:bg-dark/90"
+                    >
+                      {addedToCart ? (
+                        <>
+                          Added to Bag <Check className="h-4 w-4" />
+                        </>
+                      ) : (
+                        <>
+                          Add to Bag <ShoppingBag className="h-4 w-4" />
+                        </>
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={openInquiryForm}
+                      className="group w-full inline-flex items-center justify-center gap-3 bg-primary px-10 py-5 font-manrope text-sm font-medium tracking-wide text-white transition-all duration-300 hover:bg-primary/90"
+                    >
+                      Buy via WhatsApp
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </button>
+                  </div>
                 ) : (
                   <a
                     href={fallbackWhatsappLink}

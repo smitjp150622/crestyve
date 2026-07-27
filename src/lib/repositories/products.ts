@@ -151,6 +151,13 @@ export const products = {
     return prisma.product.count({ where: { categoryId } });
   },
 
+  async findManyForCheckout(ids: string[]) {
+    return prisma.product.findMany({
+      where: { id: { in: ids } },
+      include: { sizeStocks: true },
+    });
+  },
+
   async getSizeStocks(productId: string): Promise<SizeStockInput[]> {
     const rows = await prisma.productSizeStock.findMany({
       where: { productId },

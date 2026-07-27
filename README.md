@@ -1,19 +1,18 @@
 # CRESTYVE — Wear Your Story
 
-A luxury handcrafted fashion website built with Next.js 15. This is **not** an e-commerce site — it's a storytelling and lead generation platform designed as an Awwwards-quality immersive experience.
-
-Every interaction guides visitors toward contacting the artist through WhatsApp.
+Luxury handcrafted fashion storefront with CMS admin, WhatsApp ordering, and Razorpay checkout.
 
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS v4
-- **Animations:** GSAP, Lenis (smooth scroll), Framer Motion
-- **Database:** Neon PostgreSQL via Prisma ORM (not `db.json` — serverless hosts cannot persist filesystem writes)
-- **Auth:** NextAuth.js (admin user in Postgres, bcrypt)
+- **Animations:** GSAP, Lenis, Framer Motion
+- **Database:** Neon PostgreSQL via Prisma ORM
+- **Auth:** NextAuth.js (admin in Postgres, bcrypt)
+- **Payments:** Razorpay
+- **Email:** Resend (optional)
 - **Media:** Cloudinary
-- **Forms:** React Hook Form + Zod
 - **Deployment:** Vercel
 
 ## Getting Started
@@ -27,21 +26,12 @@ Every interaction guides visitors toward contacting the artist through WhatsApp.
 
 ```bash
 npm install
-```
-
-### Environment Setup
-
-Copy `.env.example` to `.env` and set at least:
-
-- `DATABASE_URL` — Neon connection string
-- `AUTH_SECRET` — random secret
-- `ADMIN_EMAIL` / `ADMIN_PASSWORD` — used by seed to create the admin user
-
-```bash
 cp .env.example .env
 ```
 
-### Database Setup
+Fill at least `DATABASE_URL`, `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`.
+
+### Database
 
 ```bash
 npx prisma generate
@@ -49,39 +39,38 @@ npx prisma db push
 npm run db:seed
 ```
 
-Seed imports `data/db.json` into Postgres (prices stored as integer paise) and creates the admin user.
-
 ### Development
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Admin: `/admin/login`.
+- Storefront: [http://localhost:3000](http://localhost:3000)
+- Admin: [http://localhost:3000/admin/login](http://localhost:3000/admin/login)
 
-## Project Structure
+### Tests
 
+```bash
+npm test
 ```
-src/
-├── app/                    # Next.js App Router pages
-│   ├── admin/             # Admin panel
-│   ├── about/             # About page
-│   ├── collections/       # Collections page
-│   ├── contact/           # Contact page
-│   ├── gallery/           # Gallery page
-│   ├── journal/           # Blog/Journal page
-│   ├── lookbook/          # Lookbook page
-│   ├── products/[slug]/   # Product detail page
-│   └── api/               # API routes
-├── components/
-│   ├── layout/            # Navbar, Footer, WhatsApp float
-│   ├── sections/          # Page sections (Hero, Story, etc.)
-│   └── ui/                # Reusable UI components
-├── lib/                   # Utilities, Prisma client
-├── hooks/                 # Custom React hooks
-├── types/                 # TypeScript type definitions
-└── constants/             # Site configuration
-```
+
+## Features
+
+- CMS: products, categories, gallery, testimonials, awards, settings
+- WhatsApp buy flow with admin inquiry management
+- Shopping bag + Razorpay checkout + order confirmation
+- Coupons, stock (product + size), invoices
+- Admin dashboard analytics and order management
+
+## Deployment (Vercel)
+
+1. Create Neon project → set `DATABASE_URL`
+2. Set all env vars from `.env.example` in Vercel
+3. Build command: `prisma generate && next build` (already in `package.json`)
+4. After first deploy: run `prisma db push` + `npm run db:seed` against Neon (locally with production `DATABASE_URL`, or a one-off job)
+5. Configure Razorpay webhook: `https://<domain>/api/webhooks/razorpay`
+
+See [docs/maintenance.md](docs/maintenance.md) for ops details.
 
 ## Design System
 
@@ -89,33 +78,7 @@ src/
 - **Secondary:** #D4A731 (Luxury Gold)
 - **Dark:** #111111
 - **Light:** #FAFAF8 (Warm White)
-- **Typography:** Cormorant Garamond (display), Inter (body), Manrope (UI)
-
-## Features
-
-- Immersive storytelling scroll experience
-- Full-screen video hero
-- Horizontal scroll gallery
-- Parallax and pinned sections
-- Smooth scroll (Lenis)
-- Animated statistics counters
-- WhatsApp integration on every product
-- Responsive across all devices
-- Admin panel for content management
-- Contact form with API
-- Masonry gallery with lightbox
-- Timeline component
-- Testimonial slider
-
-## Deployment
-
-Deploy to Vercel:
-
-```bash
-vercel
-```
-
-Set environment variables in Vercel dashboard.
+- **Typography:** Cormorant Garamond, Inter, Manrope
 
 ## License
 
