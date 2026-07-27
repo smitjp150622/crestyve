@@ -1,17 +1,20 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { products } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { products } from "@/lib/db-repos";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
     const body = await request.json();
 
-    const product = products.update(id, {
+    const product = await products.update(id, {
       name: body.name,
       slug: body.slug,
       description: body.description,
@@ -45,8 +48,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
-    const deleted = products.delete(id);
+    const deleted = await products.delete(id);
 
     if (!deleted) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });

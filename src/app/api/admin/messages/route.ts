@@ -1,7 +1,8 @@
-export const dynamic = "force-dynamic";
+﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { messages } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { messages } from "@/lib/db-repos";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest) {
     if (readFilter === "true") filter.read = true;
     if (readFilter === "false") filter.read = false;
 
-    const allMessages = messages.findMany(filter);
+    const allMessages = await messages.findMany(filter);
     return NextResponse.json(allMessages);
   } catch (error) {
     console.error("Failed to fetch messages:", error);
@@ -22,6 +23,8 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const body = await request.json();
     const { ids } = body as { ids: string[] };
 
@@ -32,7 +35,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const count = messages.markAsRead(ids);
+    const count = await messages.markAsRead(ids);
     return NextResponse.json({ success: true, markedRead: count });
   } catch (error) {
     console.error("Failed to mark messages as read:", error);

@@ -1,17 +1,20 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { awards } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { awards } from "@/lib/db-repos";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
     const body = await request.json();
 
-    const award = awards.update(id, body);
+    const award = await awards.update(id, body);
 
     if (!award) {
       return NextResponse.json({ error: "Award not found" }, { status: 404 });
@@ -29,8 +32,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
-    const deleted = awards.delete(id);
+    const deleted = await awards.delete(id);
 
     if (!deleted) {
       return NextResponse.json({ error: "Award not found" }, { status: 404 });

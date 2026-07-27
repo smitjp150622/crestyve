@@ -6,12 +6,12 @@ Every interaction guides visitors toward contacting the artist through WhatsApp.
 
 ## Tech Stack
 
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS v4
 - **Animations:** GSAP, Lenis (smooth scroll), Framer Motion
-- **Database:** PostgreSQL via Prisma ORM
-- **Auth:** NextAuth.js
+- **Database:** Neon PostgreSQL via Prisma ORM (not `db.json` — serverless hosts cannot persist filesystem writes)
+- **Auth:** NextAuth.js (admin user in Postgres, bcrypt)
 - **Media:** Cloudinary
 - **Forms:** React Hook Form + Zod
 - **Deployment:** Vercel
@@ -21,7 +21,7 @@ Every interaction guides visitors toward contacting the artist through WhatsApp.
 ### Prerequisites
 
 - Node.js 18+
-- PostgreSQL database (Neon recommended)
+- Neon (or any) PostgreSQL database
 
 ### Installation
 
@@ -31,7 +31,11 @@ npm install
 
 ### Environment Setup
 
-Copy `.env.example` to `.env` and fill in your values:
+Copy `.env.example` to `.env` and set at least:
+
+- `DATABASE_URL` — Neon connection string
+- `AUTH_SECRET` — random secret
+- `ADMIN_EMAIL` / `ADMIN_PASSWORD` — used by seed to create the admin user
 
 ```bash
 cp .env.example .env
@@ -42,7 +46,10 @@ cp .env.example .env
 ```bash
 npx prisma generate
 npx prisma db push
+npm run db:seed
 ```
+
+Seed imports `data/db.json` into Postgres (prices stored as integer paise) and creates the admin user.
 
 ### Development
 
@@ -50,7 +57,7 @@ npx prisma db push
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). Admin: `/admin/login`.
 
 ## Project Structure
 

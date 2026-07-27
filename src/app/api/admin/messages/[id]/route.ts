@@ -1,15 +1,18 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { messages } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { messages } from "@/lib/db-repos";
 
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
-    const deleted = messages.delete(id);
+    const deleted = await messages.delete(id);
 
     if (!deleted) {
       return NextResponse.json({ error: "Message not found" }, { status: 404 });

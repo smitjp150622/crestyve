@@ -1,17 +1,20 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { testimonials } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { testimonials } from "@/lib/db-repos";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
     const body = await request.json();
 
-    const testimonial = testimonials.update(id, {
+    const testimonial = await testimonials.update(id, {
       name: body.name,
       role: body.role,
       content: body.content,
@@ -36,8 +39,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
-    const deleted = testimonials.delete(id);
+    const deleted = await testimonials.delete(id);
 
     if (!deleted) {
       return NextResponse.json({ error: "Testimonial not found" }, { status: 404 });

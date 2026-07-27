@@ -1,17 +1,20 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { gallery } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { gallery } from "@/lib/db-repos";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
     const body = await request.json();
 
-    const image = gallery.update(id, body);
+    const image = await gallery.update(id, body);
 
     if (!image) {
       return NextResponse.json({ error: "Gallery image not found" }, { status: 404 });
@@ -29,8 +32,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
-    const deleted = gallery.delete(id);
+    const deleted = await gallery.delete(id);
 
     if (!deleted) {
       return NextResponse.json({ error: "Gallery image not found" }, { status: 404 });

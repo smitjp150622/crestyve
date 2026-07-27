@@ -1,8 +1,10 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "crestyve-default-development-secret-key-safe-to-fallback-locally",
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   providers: [
     Credentials({
       name: "credentials",
@@ -11,28 +13,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const email = credentials?.email as string;
-        const password = credentials?.password as string;
-
+        const email = credentials?.email as string | undefined;
+        const password = credentials?.password as string | undefined;
         if (!email || !password) return null;
 
-        // TODO: Replace with database lookup when Prisma is connected
-        // const user = await prisma.user.findUnique({ where: { email } });
-        // if (user && await bcrypt.compare(password, user.password)) { ... }
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user || user.role !== "ADMIN") return null;
 
-        const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@crestyve.com";
-        const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "crestyve2024";
+        const valid = await bcrypt.compare(password, user.passwordHash);
+        if (!valid) return null;
 
-        if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-          return {
-            id: "1",
-            name: "Admin",
-            email: ADMIN_EMAIL,
-            role: "ADMIN",
-          };
-        }
-
-        return null;
+        return {
+          id: user.id,
+          name: user.name ?? "Admin",
+          email: user.email,
+          role: user.role,
+        };
       },
     }),
   ],

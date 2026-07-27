@@ -1,7 +1,8 @@
-export const dynamic = "force-dynamic";
+﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { products } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { products } from "@/lib/db-repos";
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20")));
 
-    const result = products.findMany({ page, limit });
+    const result = await products.findMany({ page, limit });
 
     return NextResponse.json({
       products: result.products,
@@ -28,6 +29,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const body = await request.json();
     const { name, slug, price, categoryId } = body;
 
@@ -38,7 +41,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const product = products.create({
+    const product = await products.create({
       name,
       slug,
       description: body.description || "",
