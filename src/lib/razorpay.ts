@@ -5,7 +5,7 @@ let client: Razorpay | null = null;
 
 export function getRazorpayClient(): Razorpay {
   if (!client) {
-    const keyId = process.env.RAZORPAY_KEY_ID;
+    const keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     const keySecret = process.env.RAZORPAY_KEY_SECRET;
     if (!keyId || !keySecret) {
       throw new Error("Razorpay is not configured: missing RAZORPAY_KEY_ID/RAZORPAY_KEY_SECRET");

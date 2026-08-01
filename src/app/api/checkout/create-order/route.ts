@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
       razorpayOrderId: razorpayOrder.id,
       amount: totals.totalPaise,
       currency: "INR",
-      keyId: process.env.RAZORPAY_KEY_ID,
+      keyId: process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
       customerName: data.customerName,
       email: data.email,
       phone: data.phone,

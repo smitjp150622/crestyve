@@ -29,7 +29,7 @@ function toPaise(rupees: number) {
  */
 export async function sendOrderConfirmationEmail(input: OrderConfirmationInput) {
   const client = getClient();
-  const from = process.env.RESEND_FROM_EMAIL;
+  const from = process.env.RESEND_FROM_EMAIL || process.env.EMAIL_FROM;
   if (!client || !from) {
     console.info(`[email] Skipping order confirmation for ${input.orderNumber} (Resend not configured)`);
     return { sent: false };
