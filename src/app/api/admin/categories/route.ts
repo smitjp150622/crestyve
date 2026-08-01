@@ -1,11 +1,12 @@
-export const dynamic = "force-dynamic";
+﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { categories } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { categories } from "@/lib/db-repos";
 
 export async function GET() {
   try {
-    const allCategories = categories.findMany({ orderBy: "order" });
+    const allCategories = await categories.findMany({ orderBy: "order" });
     return NextResponse.json(allCategories);
   } catch (error) {
     console.error("Failed to fetch categories:", error);
@@ -15,6 +16,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const body = await request.json();
     const { name, slug } = body;
 
@@ -25,7 +28,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const category = categories.create({
+    const category = await categories.create({
       name,
       slug,
       description: body.description || "",

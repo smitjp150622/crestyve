@@ -1,7 +1,8 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { categories, products } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { categories, products } from "@/lib/db-repos";
 
 export async function GET(
   _request: NextRequest,
@@ -9,7 +10,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const category = categories.findById(id);
+    const category = await categories.findById(id);
 
     if (!category) {
       return NextResponse.json({ error: "Category not found" }, { status: 404 });
@@ -27,10 +28,12 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
     const body = await request.json();
 
-    const category = categories.update(id, body);
+    const category = await categories.update(id, body);
 
     if (!category) {
       return NextResponse.json({ error: "Category not found" }, { status: 404 });
@@ -48,9 +51,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { id } = await params;
 
-    const productCount = products.countByCategory(id);
+    const productCount = await products.countByCategory(id);
 
     if (productCount > 0) {
       return NextResponse.json(
@@ -59,7 +64,7 @@ export async function DELETE(
       );
     }
 
-    const deleted = categories.delete(id);
+    const deleted = await categories.delete(id);
 
     if (!deleted) {
       return NextResponse.json({ error: "Category not found" }, { status: 404 });

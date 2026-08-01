@@ -1,11 +1,12 @@
-export const dynamic = "force-dynamic";
+﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { gallery } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { gallery } from "@/lib/db-repos";
 
 export async function GET() {
   try {
-    const images = gallery.findMany();
+    const images = await gallery.findMany();
     return NextResponse.json(images);
   } catch (error) {
     console.error("Failed to fetch gallery images:", error);
@@ -15,6 +16,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const body = await request.json();
 
     if (!body.url) {
@@ -24,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const image = gallery.create({
+    const image = await gallery.create({
       title: body.title || "",
       url: body.url,
       category: body.category || "",

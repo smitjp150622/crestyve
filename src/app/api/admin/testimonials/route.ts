@@ -1,11 +1,12 @@
-export const dynamic = "force-dynamic";
+﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { testimonials } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { testimonials } from "@/lib/db-repos";
 
 export async function GET() {
   try {
-    const allTestimonials = testimonials.findMany();
+    const allTestimonials = await testimonials.findMany();
     return NextResponse.json(allTestimonials);
   } catch (error) {
     console.error("Failed to fetch testimonials:", error);
@@ -15,6 +16,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const body = await request.json();
     const { name, content } = body;
 
@@ -25,7 +28,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const testimonial = testimonials.create({
+    const testimonial = await testimonials.create({
       name,
       role: body.role || "",
       content,

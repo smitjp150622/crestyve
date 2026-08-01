@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { messages } from "@/lib/json-db";
+﻿import { NextRequest, NextResponse } from "next/server";
+import { messages } from "@/lib/db-repos";
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    messages.create({ name, email, phone, subject, message });
+    await messages.create({ name, email, phone, subject, message });
 
     return NextResponse.json({ success: true });
   } catch {

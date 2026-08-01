@@ -1,11 +1,12 @@
-export const dynamic = "force-dynamic";
+﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
-import { awards } from "@/lib/json-db";
+import { requireAdmin } from "@/lib/admin-auth";
+import { awards } from "@/lib/db-repos";
 
 export async function GET() {
   try {
-    const allAwards = awards.findMany();
+    const allAwards = await awards.findMany();
     return NextResponse.json(allAwards);
   } catch (error) {
     console.error("Failed to fetch awards:", error);
@@ -15,6 +16,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const body = await request.json();
 
     if (!body.title || !body.year) {
@@ -24,7 +27,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const award = awards.create({
+    const award = await awards.create({
       title: body.title,
       description: body.description || "",
       year: body.year,

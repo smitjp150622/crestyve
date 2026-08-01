@@ -1,11 +1,19 @@
-import { products, categories, testimonials, awards, gallery, messages, settings } from "./json-db";
+import {
+  products,
+  categories,
+  testimonials,
+  awards,
+  gallery,
+  messages,
+  settings,
+} from "./db-repos";
 
 export async function getProducts(options?: {
   category?: string;
   featured?: boolean;
   limit?: number;
 }) {
-  const result = products.findMany();
+  const result = await products.findMany();
   let items = result.products;
 
   if (options?.category) {
@@ -33,7 +41,7 @@ export async function getCategories() {
 }
 
 export async function getTestimonials(featured?: boolean) {
-  const items = testimonials.findMany();
+  const items = await testimonials.findMany();
   if (featured !== undefined) {
     return items.filter((t) => t.featured === featured);
   }
@@ -41,12 +49,12 @@ export async function getTestimonials(featured?: boolean) {
 }
 
 export async function getAwards() {
-  const items = awards.findMany();
+  const items = await awards.findMany();
   return items.sort((a, b) => b.year - a.year);
 }
 
 export async function getGalleryImages(category?: string) {
-  const items = gallery.findMany();
+  const items = await gallery.findMany();
   if (category) {
     return items.filter((g) => g.category === category);
   }
