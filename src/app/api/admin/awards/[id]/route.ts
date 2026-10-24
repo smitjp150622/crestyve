@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { awards } from "@/lib/db-repos";
 
@@ -23,7 +24,7 @@ export async function PUT(
     return NextResponse.json(award);
   } catch (error) {
     console.error("Failed to update award:", error);
-    return NextResponse.json({ error: "Failed to update award" }, { status: 500 });
+    return errorResponse(error, "Failed to update award");
   }
 }
 
@@ -44,6 +45,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Failed to delete award:", error);
-    return NextResponse.json({ error: "Failed to delete award" }, { status: 500 });
+    return errorResponse(error, "Failed to delete award");
   }
 }

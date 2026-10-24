@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { gallery } from "@/lib/db-repos";
 
@@ -23,7 +24,7 @@ export async function PUT(
     return NextResponse.json(image);
   } catch (error) {
     console.error("Failed to update gallery image:", error);
-    return NextResponse.json({ error: "Failed to update gallery image" }, { status: 500 });
+    return errorResponse(error, "Failed to update gallery image");
   }
 }
 
@@ -44,6 +45,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Failed to delete gallery image:", error);
-    return NextResponse.json({ error: "Failed to delete gallery image" }, { status: 500 });
+    return errorResponse(error, "Failed to delete gallery image");
   }
 }

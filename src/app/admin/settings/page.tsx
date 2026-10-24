@@ -1,5 +1,7 @@
 "use client";
 
+import ImageUpload from "@/components/admin/image-upload";
+
 import { useState, useEffect, useCallback } from "react";
 import { Loader2, Save, AlertCircle, Check, Settings, MapPin, Phone, Mail } from "lucide-react";
 
@@ -197,19 +199,12 @@ export default function AdminSettings() {
             <h3 className="font-[Manrope] text-sm font-semibold text-gray-900">Artist</h3>
           </div>
           <div>
-            <label className="block font-[Manrope] text-xs font-medium text-gray-700 mb-1.5">Artist Image URL</label>
-            <input
-              type="url"
+            <label className="block font-[Manrope] text-xs font-medium text-gray-700 mb-1.5">Artist Image</label>
+            <ImageUpload
               value={settings.artistImage}
-              onChange={(e) => updateField("artistImage", e.target.value)}
-              placeholder="https://..."
-              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 font-[Inter] text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1C3F]/20 focus:border-[#8B1C3F]"
+              onChange={(url) => updateField("artistImage", url)}
+              folder="settings"
             />
-            {settings.artistImage && (
-              <div className="mt-3 border border-gray-100 rounded-lg p-2 inline-block">
-                <img src={settings.artistImage} alt="Artist" className="h-20 w-20 object-cover rounded" />
-              </div>
-            )}
           </div>
         </div>
 

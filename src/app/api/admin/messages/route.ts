@@ -1,6 +1,7 @@
 ﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { messages } from "@/lib/db-repos";
 
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(allMessages);
   } catch (error) {
     console.error("Failed to fetch messages:", error);
-    return NextResponse.json({ error: "Failed to fetch messages" }, { status: 500 });
+    return errorResponse(error, "Failed to fetch messages");
   }
 }
 
@@ -41,6 +42,6 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ success: true, markedRead: count });
   } catch (error) {
     console.error("Failed to mark messages as read:", error);
-    return NextResponse.json({ error: "Failed to mark messages as read" }, { status: 500 });
+    return errorResponse(error, "Failed to mark messages as read");
   }
 }

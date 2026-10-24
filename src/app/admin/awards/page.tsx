@@ -1,5 +1,7 @@
 "use client";
 
+import ImageUpload from "@/components/admin/image-upload";
+
 import { useState, useEffect, useCallback } from "react";
 import { Plus, Edit, Trash2, X, Loader2, Trophy, AlertCircle, Check } from "lucide-react";
 
@@ -251,13 +253,11 @@ export default function AdminAwards() {
                 </div>
               </div>
               <div>
-                <label className="block font-[Manrope] text-xs font-medium text-gray-700 mb-1.5">Image URL</label>
-                <input
-                  type="url"
+                <label className="block font-[Manrope] text-xs font-medium text-gray-700 mb-1.5">Image</label>
+                <ImageUpload
                   value={form.image}
-                  onChange={(e) => setForm({ ...form, image: e.target.value })}
-                  placeholder="https://..."
-                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 font-[Inter] text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1C3F]/20 focus:border-[#8B1C3F]"
+                  onChange={(url) => setForm({ ...form, image: url })}
+                  folder="awards"
                 />
               </div>
               <div className="flex justify-end gap-3 pt-4">

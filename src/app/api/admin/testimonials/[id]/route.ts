@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { testimonials } from "@/lib/db-repos";
 
@@ -30,7 +31,7 @@ export async function PUT(
     return NextResponse.json(testimonial);
   } catch (error) {
     console.error("Failed to update testimonial:", error);
-    return NextResponse.json({ error: "Failed to update testimonial" }, { status: 500 });
+    return errorResponse(error, "Failed to update testimonial");
   }
 }
 
@@ -51,6 +52,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Failed to delete testimonial:", error);
-    return NextResponse.json({ error: "Failed to delete testimonial" }, { status: 500 });
+    return errorResponse(error, "Failed to delete testimonial");
   }
 }

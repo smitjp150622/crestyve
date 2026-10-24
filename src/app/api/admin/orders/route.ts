@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { orders } from "@/lib/repositories/orders";
 import type { OrderStatus, PaymentStatus } from "@prisma/client";
@@ -52,6 +53,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Failed to fetch orders:", error);
-    return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
+    return errorResponse(error, "Failed to fetch orders");
   }
 }

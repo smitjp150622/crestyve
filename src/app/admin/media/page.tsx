@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Edit, Trash2, X, Loader2, Image, AlertCircle, Check, Eye, Upload } from "lucide-react";
+import { Plus, Edit, Trash2, X, Loader2, Image, AlertCircle, Check, Eye } from "lucide-react";
+import ImageUpload from "@/components/admin/image-upload";
 
 interface GalleryItem {
   id: string;
@@ -40,24 +41,6 @@ export default function AdminMedia() {
     setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const [uploading, setUploading] = useState(false);
-
-  const handleUpload = async (file: File) => {
-    setUploading(true);
-    try {
-      const data = new FormData();
-      data.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body: data });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Upload failed");
-      setForm((prev) => ({ ...prev, url: json.url }));
-      showToast("Image uploaded", "success");
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : "Upload failed", "error");
-    } finally {
-      setUploading(false);
-    }
-  };
 
   const fetchItems = useCallback(async () => {
     try {
@@ -258,31 +241,12 @@ export default function AdminMedia() {
                 />
               </div>
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="block font-[Manrope] text-xs font-medium text-gray-700">Image URL</label>
-                  <label className="inline-flex items-center gap-1.5 cursor-pointer font-[Manrope] text-xs font-medium text-[#8B1C3F] hover:underline">
-                    {uploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
-                    {uploading ? "Uploading..." : "Upload image"}
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp,image/avif"
-                      disabled={uploading}
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleUpload(file);
-                        e.target.value = "";
-                      }}
-                    />
-                  </label>
-                </div>
-                <input
-                  type="url"
-                  required
+                <label className="block font-[Manrope] text-xs font-medium text-gray-700 mb-1.5">Image</label>
+                <ImageUpload
                   value={form.url}
-                  onChange={(e) => setForm({ ...form, url: e.target.value })}
-                  placeholder="https://..."
-                  className="w-full border border-gray-200 rounded-lg px-4 py-2.5 font-[Inter] text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1C3F]/20 focus:border-[#8B1C3F]"
+                  onChange={(url) => setForm({ ...form, url })}
+                  folder="gallery"
+                  required
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -315,11 +279,6 @@ export default function AdminMedia() {
                 </button>
                 <label className="font-[Manrope] text-xs font-medium text-gray-700">Featured</label>
               </div>
-              {form.url && (
-                <div className="border border-gray-100 rounded-lg p-2">
-                  <img src={form.url} alt="Preview" className="w-full h-32 object-cover rounded" />
-                </div>
-              )}
               <div className="flex justify-end gap-3 pt-4">
                 <button
                   type="button"

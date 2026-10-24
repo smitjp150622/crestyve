@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { coupons } from "@/lib/repositories/coupons";
 import { couponUpsertSchema } from "@/lib/validations/coupon";
@@ -14,7 +15,7 @@ export async function GET() {
     return NextResponse.json(items);
   } catch (error) {
     console.error("Failed to fetch coupons:", error);
-    return NextResponse.json({ error: "Failed to fetch coupons" }, { status: 500 });
+    return errorResponse(error, "Failed to fetch coupons");
   }
 }
 
@@ -44,6 +45,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Coupon code already exists" }, { status: 409 });
     }
     console.error("Failed to create coupon:", error);
-    return NextResponse.json({ error: "Failed to create coupon" }, { status: 500 });
+    return errorResponse(error, "Failed to create coupon");
   }
 }

@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { inquiries } from "@/lib/repositories/inquiries";
 import { inquiryStatusSchema } from "@/lib/validations/inquiry";
@@ -20,6 +21,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(items);
   } catch (error) {
     console.error("Failed to fetch inquiries:", error);
-    return NextResponse.json({ error: "Failed to fetch inquiries" }, { status: 500 });
+    return errorResponse(error, "Failed to fetch inquiries");
   }
 }

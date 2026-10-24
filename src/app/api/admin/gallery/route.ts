@@ -1,6 +1,7 @@
 ﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { gallery } from "@/lib/db-repos";
 
@@ -12,7 +13,7 @@ export async function GET() {
     return NextResponse.json(images);
   } catch (error) {
     console.error("Failed to fetch gallery images:", error);
-    return NextResponse.json({ error: "Failed to fetch gallery images" }, { status: 500 });
+    return errorResponse(error, "Failed to fetch gallery images");
   }
 }
 
@@ -40,6 +41,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(image, { status: 201 });
   } catch (error) {
     console.error("Failed to create gallery image:", error);
-    return NextResponse.json({ error: "Failed to create gallery image" }, { status: 500 });
+    return errorResponse(error, "Failed to create gallery image");
   }
 }

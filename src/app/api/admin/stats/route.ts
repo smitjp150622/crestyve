@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 
@@ -72,6 +73,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Failed to fetch admin stats:", error);
-    return NextResponse.json({ error: "Failed to fetch stats" }, { status: 500 });
+    return errorResponse(error, "Failed to fetch stats");
   }
 }

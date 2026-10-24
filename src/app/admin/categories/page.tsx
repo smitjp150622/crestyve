@@ -1,5 +1,7 @@
 "use client";
 
+import ImageUpload from "@/components/admin/image-upload";
+
 import { useState, useEffect, useCallback } from "react";
 import {
   Plus,
@@ -459,14 +461,12 @@ export default function AdminCategories() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="sm:col-span-2">
                   <label className="block font-manrope text-xs font-medium text-gray-700 mb-1.5">
-                    Image URL
+                    Image
                   </label>
-                  <input
-                    type="url"
+                  <ImageUpload
                     value={form.image}
-                    onChange={(e) => updateField("image", e.target.value)}
-                    placeholder="https://..."
-                    className="w-full border border-gray-200 rounded-lg px-4 py-2.5 font-inter text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1C3F]/20 focus:border-[#8B1C3F]"
+                    onChange={(url) => updateField("image", url)}
+                    folder="categories"
                   />
                 </div>
                 <div>

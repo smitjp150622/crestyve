@@ -1,6 +1,7 @@
 ﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { products } from "@/lib/db-repos";
 
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Failed to fetch products:", error);
-    return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
+    return errorResponse(error, "Failed to fetch products");
   }
 }
 
@@ -66,6 +67,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(product, { status: 201 });
   } catch (error) {
     console.error("Failed to create product:", error);
-    return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
+    return errorResponse(error, "Failed to create product");
   }
 }

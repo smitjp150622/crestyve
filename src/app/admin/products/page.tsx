@@ -1,5 +1,7 @@
 "use client";
 
+import ImageUpload from "@/components/admin/image-upload";
+
 import { useState, useEffect, useCallback } from "react";
 import {
   Plus,
@@ -688,18 +690,18 @@ export default function AdminProducts() {
               <div>
                 <label className="block font-manrope text-xs font-medium text-gray-700 mb-1.5">
                   Images
-                  <span className="text-gray-400 font-normal ml-1">(URLs)</span>
+                  <span className="text-gray-400 font-normal ml-1">(upload or paste a URL)</span>
                 </label>
                 <div className="space-y-2">
                   {form.images.map((img, idx) => (
                     <div key={idx} className="flex items-center gap-2">
-                      <input
-                        type="url"
-                        value={img}
-                        onChange={(e) => updateImage(idx, e.target.value)}
-                        placeholder="https://..."
-                        className="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 font-inter text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1C3F]/20 focus:border-[#8B1C3F]"
-                      />
+                      <div className="flex-1">
+                        <ImageUpload
+                          value={img}
+                          onChange={(url) => updateImage(idx, url)}
+                          folder="products"
+                        />
+                      </div>
                       {form.images.length > 1 && (
                         <button
                           type="button"

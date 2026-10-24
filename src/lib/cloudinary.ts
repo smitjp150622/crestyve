@@ -1,5 +1,16 @@
 import { v2 as cloudinary } from "cloudinary";
 
+export const UPLOAD_FOLDERS = [
+  "products",
+  "categories",
+  "awards",
+  "testimonials",
+  "gallery",
+  "settings",
+] as const;
+
+export type UploadFolder = (typeof UPLOAD_FOLDERS)[number];
+
 export function isCloudinaryConfigured() {
   return Boolean(
     process.env.CLOUDINARY_CLOUD_NAME &&
@@ -8,20 +19,17 @@ export function isCloudinaryConfigured() {
   );
 }
 
-export function uploadImage(buffer: Buffer, folder = "crestyve"): Promise<string> {
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-    secure: true,
-  });
+export function createUploadSignature(folder: UploadFolder) {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME!;
+  const apiKey = process.env.CLOUDINARY_API_KEY!;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET!;
+  const timestamp = Math.round(Date.now() / 1000);
+  const folderPath = `crestyve/${folder}`;
 
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader
-      .upload_stream({ folder, resource_type: "image" }, (error, result) => {
-        if (error || !result) return reject(error ?? new Error("Upload failed"));
-        resolve(result.secure_url);
-      })
-      .end(buffer);
-  });
+  const signature = cloudinary.utils.api_sign_request(
+    { folder: folderPath, timestamp },
+    apiSecret
+  );
+
+  return { cloudName, apiKey, timestamp, folder: folderPath, signature };
 }

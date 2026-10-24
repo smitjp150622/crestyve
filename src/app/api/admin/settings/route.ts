@@ -1,6 +1,7 @@
 ﻿export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { settings } from "@/lib/db-repos";
 
@@ -12,7 +13,7 @@ export async function GET() {
     return NextResponse.json(siteSettings);
   } catch (error) {
     console.error("Failed to fetch settings:", error);
-    return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 });
+    return errorResponse(error, "Failed to fetch settings");
   }
 }
 
@@ -25,6 +26,6 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(updated);
   } catch (error) {
     console.error("Failed to update settings:", error);
-    return NextResponse.json({ error: "Failed to update settings" }, { status: 500 });
+    return errorResponse(error, "Failed to update settings");
   }
 }

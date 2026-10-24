@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { coupons } from "@/lib/repositories/coupons";
 import { couponUpsertSchema } from "@/lib/validations/coupon";
@@ -31,7 +32,7 @@ export async function PUT(
     return NextResponse.json(coupon);
   } catch (error) {
     console.error("Failed to update coupon:", error);
-    return NextResponse.json({ error: "Failed to update coupon" }, { status: 500 });
+    return errorResponse(error, "Failed to update coupon");
   }
 }
 
@@ -52,6 +53,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Failed to delete coupon:", error);
-    return NextResponse.json({ error: "Failed to delete coupon" }, { status: 500 });
+    return errorResponse(error, "Failed to delete coupon");
   }
 }

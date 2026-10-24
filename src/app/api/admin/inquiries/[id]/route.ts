@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { NextRequest, NextResponse } from "next/server";
+import { errorResponse } from "@/lib/api-errors";
 import { requireAdmin } from "@/lib/admin-auth";
 import { inquiries } from "@/lib/repositories/inquiries";
 import { inquiryStatusSchema } from "@/lib/validations/inquiry";
@@ -28,7 +29,7 @@ export async function PATCH(
     return NextResponse.json(updated);
   } catch (error) {
     console.error("Failed to update inquiry:", error);
-    return NextResponse.json({ error: "Failed to update inquiry" }, { status: 500 });
+    return errorResponse(error, "Failed to update inquiry");
   }
 }
 
@@ -49,6 +50,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Failed to delete inquiry:", error);
-    return NextResponse.json({ error: "Failed to delete inquiry" }, { status: 500 });
+    return errorResponse(error, "Failed to delete inquiry");
   }
 }
