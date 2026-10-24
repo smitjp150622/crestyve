@@ -6,6 +6,8 @@ import { testimonials } from "@/lib/db-repos";
 
 export async function GET() {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const allTestimonials = await testimonials.findMany();
     return NextResponse.json(allTestimonials);
   } catch (error) {

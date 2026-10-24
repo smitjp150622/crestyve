@@ -6,6 +6,8 @@ import { awards } from "@/lib/db-repos";
 
 export async function GET() {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const allAwards = await awards.findMany();
     return NextResponse.json(allAwards);
   } catch (error) {

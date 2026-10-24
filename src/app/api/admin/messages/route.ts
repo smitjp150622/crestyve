@@ -6,6 +6,8 @@ import { messages } from "@/lib/db-repos";
 
 export async function GET(request: NextRequest) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { searchParams } = new URL(request.url);
     const readFilter = searchParams.get("read");
 

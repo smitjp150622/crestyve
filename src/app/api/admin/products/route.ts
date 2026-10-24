@@ -6,6 +6,8 @@ import { products } from "@/lib/db-repos";
 
 export async function GET(request: NextRequest) {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const { searchParams } = new URL(request.url);
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") || "20")));

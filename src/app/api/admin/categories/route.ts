@@ -6,6 +6,8 @@ import { categories } from "@/lib/db-repos";
 
 export async function GET() {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const allCategories = await categories.findMany({ orderBy: "order" });
     return NextResponse.json(allCategories);
   } catch (error) {

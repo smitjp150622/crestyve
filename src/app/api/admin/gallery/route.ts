@@ -6,6 +6,8 @@ import { gallery } from "@/lib/db-repos";
 
 export async function GET() {
   try {
+    const gate = await requireAdmin();
+    if (!gate.ok) return gate.response;
     const images = await gallery.findMany();
     return NextResponse.json(images);
   } catch (error) {
